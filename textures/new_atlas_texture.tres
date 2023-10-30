@@ -1,0 +1,6 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://c4u35eyttlysx"]
+
+[ext_resource type="Texture2D" path="res://textures/block-textures.dds" id="1_c0ryo"]
+
+[resource]
+atlas = ExtResource("1_c0ryo")
