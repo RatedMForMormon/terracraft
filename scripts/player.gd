@@ -19,6 +19,9 @@ func _ready():
 func _input(event):
 	if event is InputEventMouseMotion:
 		rotate_y(event.relative.x * -mouse_sensitivity) # change this to turn the character the direction they are moving
+		# camera should see through walls only to make the surroundings of the player visible
+		# camera should not move the player, the player's direction should be relative to the camera
+		# camera should only move when holding right-click (to allow the player to click on the screen)
 		$Head.rotate_x(event.relative.y * -mouse_sensitivity)
 		$Head.rotation.x = clamp($Head.rotation.x, -PI/2, PI/2)
 
