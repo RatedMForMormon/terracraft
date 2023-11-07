@@ -2,6 +2,7 @@ extends Node
 
 const DIMENSION = Vector3(16, 64, 16)
 const TEXTURE_ATLAS_SIZE = Vector2(3,2)
+const BLOCK_SIZE = 1
 
 enum {
 	TOP,
