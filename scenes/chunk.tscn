@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgbmgiq14cy8e"]
+[gd_scene load_steps=3 format=3 uid="uid://cgbmgiq14cy8e"]
 
 [ext_resource type="Script" path="res://scripts/chunk.gd" id="1_ht6ml"]
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_yi27p"]
+frequency = 0.004
+metadata/_preview_in_3d_space_ = true
+
 [node name="chunk" type="StaticBody3D"]
 script = ExtResource("1_ht6ml")
+noise = SubResource("FastNoiseLite_yi27p")
