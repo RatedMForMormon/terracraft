@@ -1,14 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://c72hrnnxucijx"]
+[gd_scene load_steps=3 format=3 uid="uid://c72hrnnxucijx"]
 
 [ext_resource type="Script" path="res://scripts/World.gd" id="1_ro5lg"]
-[ext_resource type="Script" path="res://scripts/Chunks.gd" id="3_syr52"]
-[ext_resource type="PackedScene" uid="uid://cjp5abqwsg25k" path="res://scenes/player.tscn" id="3_wrae2"]
+[ext_resource type="PackedScene" uid="uid://dj26mkfiq6x5g" path="res://scenes/player.tscn" id="3_wrae2"]
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_ro5lg")
 
-[node name="Player" parent="." instance=ExtResource("3_wrae2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0387, 34.7695, 9.3093)
-
 [node name="Chunks" type="Node3D" parent="."]
-script = ExtResource("3_syr52")
+
+[node name="player" parent="." instance=ExtResource("3_wrae2")]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 54.5976, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.656151, 0.723707, -0.213809, 0, 0.283329, 0.959023, 0.754629, 0.629264, -0.185907, 0, 43.6406, 0)
