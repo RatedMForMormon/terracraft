@@ -3,13 +3,13 @@ extends StaticBody3D
 
 const vertices = [
 	Vector3(0, 0, 0), #0
-	Vector3(1, 0, 0), #1
-	Vector3(0, 1, 0), #2
-	Vector3(1, 1, 0), #3
-	Vector3(0, 0, 1), #4
-	Vector3(1, 0, 1), #5
-	Vector3(0, 1, 1), #6
-	Vector3(1, 1, 1)  #7
+	Vector3(Global.BLOCK_SIZE, 0, 0), #1
+	Vector3(0, Global.BLOCK_SIZE, 0), #2
+	Vector3(Global.BLOCK_SIZE, Global.BLOCK_SIZE, 0), #3
+	Vector3(0, 0, Global.BLOCK_SIZE), #4
+	Vector3(Global.BLOCK_SIZE, 0, 1), #5
+	Vector3(0, Global.BLOCK_SIZE, Global.BLOCK_SIZE), #6
+	Vector3(Global.BLOCK_SIZE, Global.BLOCK_SIZE, Global.BLOCK_SIZE)  #7
 ]
 
 const TOP = [2, 3, 7, 6]
@@ -25,7 +25,16 @@ var st = SurfaceTool.new()
 var mesh = null
 var meshInstance = null
 
+var chunk_position: Vector2
+func set_chunk_position(x, y):
+	chunk_position = Vector2(x, y)
+	position = Vector3(x * Global.BLOCK_SIZE, 0, y * Global.BLOCK_SIZE) * Global.DIMENSION
+	
+	self.visible = false
+
 var material = preload("res://textures/new_standard_material_3d.tres")
+
+@export var noise = FastNoiseLite.new()
 
 func _ready():
 	generate()
@@ -34,22 +43,25 @@ func _ready():
 func generate():
 	blocks = []
 	blocks.resize(Global.DIMENSION.x)
-	for i in range(0, Global.DIMENSION.x):
-		blocks[i] = []
-		blocks[i].resize(Global.DIMENSION.y)
-		for j in range(0, Global.DIMENSION.y):
-			blocks[i][j] = []
-			blocks[i][j].resize(Global.DIMENSION.z)
-			for k in range(0, Global.DIMENSION.z):
+	for x in range(0, Global.DIMENSION.x):
+		blocks[x] = []
+		blocks[x].resize(Global.DIMENSION.y)
+		for y in range(0, Global.DIMENSION.y):
+			blocks[x][y] = []
+			blocks[x][y].resize(Global.DIMENSION.z)
+			for z in range(0, Global.DIMENSION.z):
+				var global_pos = chunk_position * Vector2(Global.DIMENSION.x, Global.DIMENSION.z) + Vector2(x, z)
+				
+				var height = int((noise.get_noise_2dv(global_pos) + 1)/2 * Global.DIMENSION.y)
+				
 				var block = Global.AIR
-				if j < 16:
+				if y < height/2:
 					block = Global.STONE
-				elif j < 32:
+				elif y < height:
 					block = Global.DIRT
-				elif j == 32:
+				elif y == height:
 					block = Global.GRASS
-
-				blocks[i][j][k] = block
+				blocks[x][y][z] = block
 
 func update():
 	if meshInstance != null:
@@ -64,7 +76,7 @@ func update():
 	for x in Global.DIMENSION.x:
 		for y in Global.DIMENSION.y:
 			for z in Global.DIMENSION.z:
-				create_block(x, y, z)
+				create_block(x * Global.BLOCK_SIZE, y * Global.BLOCK_SIZE, z * Global.BLOCK_SIZE)
 
 	st.generate_normals(false)
 	st.set_material(material)
@@ -73,6 +85,8 @@ func update():
 
 	add_child(meshInstance)
 	meshInstance.create_trimesh_collision()
+	
+	self.visible = true
 
 func check_transparent(x, y, z):
 	if x >= 0 and x < Global.DIMENSION.x and y >= 0 and y < Global.DIMENSION.y and z >= 0 and z < Global.DIMENSION.z:
